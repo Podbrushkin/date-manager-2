@@ -1,5 +1,9 @@
+package datemanager;
+
 import java.io.*;
 import java.nio.file.*;
+import java.util.Arrays;
+
 
 /*
  * Inspired by:
@@ -41,7 +45,9 @@ public class ShortcutFactory {
 		writer.write(code);
 		writer.close();
 		
-		Process p = Runtime.getRuntime().exec( "wscript \""+script.getAbsolutePath()+"\"");
+		var command = new String[]{"wscript", script.getAbsolutePath().toString()};
+		System.out.println(Arrays.toString(command));
+		Process p = Runtime.getRuntime().exec(command);
 		p.waitFor();
 		if(!script.delete()) {
 			System.err.println("Failed to delete tempory VBS file: "+script.getAbsolutePath());

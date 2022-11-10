@@ -1,0 +1,49 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>podbrushkin</groupId>
+	<artifactId>DateManager</artifactId>
+	<version>0.1</version>
+	<packaging>jar</packaging>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>18</maven.compiler.source>
+		<maven.compiler.target>18</maven.compiler.target>
+	</properties>
+	
+	<dependencies>
+		
+
+
+	</dependencies>
+	
+	<build>
+		<finalName>DateManager</finalName>
+		<plugins>
+		  <plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>exec-maven-plugin</artifactId>
+			<version>3.0.0</version>
+			<configuration>
+				<mainClass>datemanager.DateManager</mainClass>
+			</configuration>
+		</plugin>
+		
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<version>3.2.2</version>
+			<configuration>
+			  <archive>
+				<manifest>
+				  <addClasspath>true</addClasspath>
+				  <mainClass>datemanager.DateManager</mainClass>
+				</manifest>
+			  </archive>
+			</configuration>
+		</plugin>
+
+		</plugins>
+	</build>
+	
+</project>

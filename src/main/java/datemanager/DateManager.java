@@ -1,3 +1,5 @@
+package datemanager;
+
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -54,7 +56,7 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Files;
 
-public class NapominalkaTable extends JFrame {
+public class DateManager extends JFrame {
 	// private static ResourceBundle rb = ResourceBundle.getBundle("localization", Locale.getDefault());
 	// private static ResourceBundle rb = ResourceBundle.getBundle("localization", Locale.forLanguageTag("ru"));
 	private static ResourceBundle rb;
@@ -73,7 +75,7 @@ public class NapominalkaTable extends JFrame {
 	private Map<String,DateTimeFormatter> possibleFormats = generatePossibleFormats();
 	DateTimeFormatter customDateFormatter = null;
 	
-	public NapominalkaTable() {
+	public DateManager() {
 		super("Date Manager");
 		
 		addWindowListener(new WindowAdapter() {
@@ -304,7 +306,20 @@ public class NapominalkaTable extends JFrame {
 		btn.setToolTipText(rb.getString("menu.file.export_"));
 		menu.add(btn);
 		
-		if (System.getProperty("os.name").contains("Windows")) {
+		String curJar = "";
+		try {
+			curJar = 
+			this.getClass().getProtectionDomain()
+				.getCodeSource().getLocation()
+				.toURI().getPath().toLowerCase();
+		} catch (Exception e) {
+			System.err.println("Failed to determine where app is started from, "+
+				"autostart will not be available");
+		}
+		
+		if (System.getProperty("os.name").contains("Windows") &&
+			curJar.endsWith(".jar")) {
+				
 			btn = createAutostartItem();
 			menu.add(btn);
 		}
@@ -402,9 +417,6 @@ public class NapominalkaTable extends JFrame {
 					
 					showRestartNeededWindow();
 					
-					// saveSettings();
-					// dispose();
-					// new NapominalkaTable();
 				}
 			});
 			// System.out.println("Comparator:");
@@ -908,6 +920,8 @@ public class NapominalkaTable extends JFrame {
 			if (ie.getStateChange() == ItemEvent.SELECTED) {
 				try {
 					Path curJar = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).toPath();
+					System.out.println(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+					System.out.println("curJar: "+curJar);
 					if (!curJar.toString().endsWith(".jar")) return;
 					if (Files.exists(link)) {
 						System.out.printf("Attempt to create duplicating autostart link - checkbox is in wrong state");
@@ -1027,7 +1041,7 @@ public class NapominalkaTable extends JFrame {
 	
 	public static void main(String[] args) {
 		var tmp = new File(System.getProperty("user.home")+File.separator+".napominalka"+File.separator+"settings.tsv");
-		var settings = NapominalkaTable.readSettingsFromFile(tmp.toPath());
+		var settings = DateManager.readSettingsFromFile(tmp.toPath());
 		System.setProperty("sun.java2d.uiScale", settings.getOrDefault("uiScale", "3.0"));
 		var languageTag = settings.getOrDefault("language", "en");
 		rb = ResourceBundle.getBundle("localization", Locale.forLanguageTag(languageTag));
@@ -1037,7 +1051,7 @@ public class NapominalkaTable extends JFrame {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
 			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Exception e) {e.printStackTrace();}
-		new NapominalkaTable();
+		new DateManager();
 	}
 	
 	private static void printAvailableLAFs() {
