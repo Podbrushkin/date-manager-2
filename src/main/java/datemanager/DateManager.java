@@ -121,8 +121,10 @@ public class DateManager extends JFrame {
 					
 					if (ld.equals(LocalDate.now()))
 						c.setBackground(new Color(140,240,140));
-					else if (ld.equals(tableModel.getClosestDateInFuture()))
+					else if (ld.equals(tableModel.getClosestDateInFuture())) {
+						System.out.println(".getClosestDateInFuture()="+tableModel.getClosestDateInFuture());
 						c.setBackground(Color.LIGHT_GRAY);
+					}
 					else 
 						c.setBackground(getBackground());
 				}
@@ -1173,23 +1175,14 @@ class LocalDateCellEditor extends DefaultCellEditor { //implements TableCellEdit
 class MyTableModel extends AbstractTableModel {
 	
 	private String[] columnNames = {"Date", "Description"};
-	/* private Object[][] data = {
-		{LocalDate.now(), "Kathy Smith"},
-		{LocalDate.now(), "Pity Fella"},
-	}; */
-	
-	// private ArrayList<Map.Entry<LocalDate,String>> data = new ArrayList<>();
 	
 	private ArrayList<Object[]> data = new ArrayList<>();
 	private LocalDate closestDateInFuture = null;
 	
 	MyTableModel() {
-		// data.add(new Object[]{LocalDate.now(), "Kathy Smith"});
-		// data.add(new Object[]{LocalDate.now(), "Pity Fella"});
 	}
 
 	public void setColumnNames(String[] columnNames) {
-		// System.out.println("setColumnNames:"+Arrays.toString(columnNames));
 		this.columnNames = columnNames;
 	}
 	
@@ -1202,12 +1195,10 @@ class MyTableModel extends AbstractTableModel {
 	}
 
 	public String getColumnName(int col) {
-		// System.out.println(Arrays.toString(columnNames));
 		return columnNames[col];
 	}
 
 	public Object getValueAt(int row, int col) {
-		// System.out.printf("(%s,%s): %s\n",row,col,data.get(row)[col]);
 		return data.get(row)[col];
 	}
 	
@@ -1310,6 +1301,7 @@ class MyTableModel extends AbstractTableModel {
 	}
 	
 	private void setClosestDateInFuture() {
+		
 		// dataHashCode = data.hashCode();
 		var today = LocalDate.now();
 		var currentYear = today.getYear();
@@ -1317,16 +1309,20 @@ class MyTableModel extends AbstractTableModel {
 		var tmpSet = new TreeSet<LocalDate>(new MyDateWoYearComparator());
 		tmpSet.addAll(data.stream().map(a -> (LocalDate)a[0]).toList());
 		closestDateInFuture = tmpSet.higher(today);
-		if (closestDateInFuture == null)
+		
+		if (closestDateInFuture == null && tmpSet.size() > 0)
+			closestDateInFuture = tmpSet.first();
+		
+		/* if (closestDateInFuture == null)
 		for (var ld : tmpSet) {
 			System.out.print(".");
 			if (ld.withYear(currentYear).isAfter(today)) {
 				closestDateInFuture = ld;
-				return;
+				break;
 			}
-		}
-		// closestDateInFuture = (LocalDate)data.get(0)[0];
-		// closestDateInFuture = tmpSet.first();
+		} */
+		// System.out.println("closestDateInFuture="+closestDateInFuture);
+		return;
 	}
 	
 	private void printDebugData() {
