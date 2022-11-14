@@ -119,7 +119,7 @@ public class DateManager extends JFrame {
 					var tableModel = ((MyTableModel)table1.getModel());
 					var ld = (LocalDate)tableModel.getValueAt(convertRowIndexToModel​(row), 0);
 					
-					if (ld.equals(LocalDate.now()))
+					if (ld.withYear(2000).equals(LocalDate.now().withYear(2000)))
 						c.setBackground(new Color(140,240,140));
 					else if (ld.equals(tableModel.getClosestDateInFuture())) {
 						System.out.println(".getClosestDateInFuture()="+tableModel.getClosestDateInFuture());
